@@ -6,6 +6,8 @@ ConfigModule.forRoot({
   envFilePath: '.env',
 })
 const configService = new ConfigService()
+const entitiesPath = __dirname + '/../**/*.entity{.ts,.js}';
+const migrationsPath = __dirname + '/../migrations/*{.ts,.js}';
 export const dataSourceConfig: DataSourceOptions = {
   type: 'postgres',
   host: configService.get('DB_HOST'),
@@ -14,14 +16,15 @@ export const dataSourceConfig: DataSourceOptions = {
   password: configService.get('DB_PASSWORD'),
   database: configService.get('DB_DATABASE'),
   entities: [
-    __dirname + '/../**/**/*.entity{.ts,.js}',
+    entitiesPath
   ],
   migrations: [
-    __dirname + '/../migrations/*{.ts,.js}',
+    migrationsPath
   ],
-  synchronize: true,
+  synchronize: false,
   logging: true,
   namingStrategy: new SnakeNamingStrategy(),
 }
-
+console.log('Entities path:', entitiesPath);
+console.log('Migrations path:', migrationsPath);
 export const AppDS = new DataSource(dataSourceConfig);

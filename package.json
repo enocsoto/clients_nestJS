@@ -18,11 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "orm:init": "typeorm-ts-node-esm -d ./src/config/data.source.ts",
-    "mig:g": "npm run orm:init migration:generate",
-    "mig:u": "npm run orm:init migration:up",
-    "mig:d": "npm run orm:init migration:down",
-    "mig:run": "npm run orm:init migration:run"
+    "orm:gen": "yarn build && npx typeorm migration:generate --dataSource ./dist/config/data.source.js",
+    "orm:run": "yarn build && npx typeorm migration:run --dataSource ./dist/config/data.source.js",
+    "orm:rev": "npx typeorm migration:revert --dataSource /dist/config/data.source.js",
+    "orm:create": "npx typeorm migration:create --dataSource ./dist/config/data.source.js"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -36,7 +35,8 @@
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "typeorm-naming-strategies": "^4.1.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -44,7 +44,7 @@
     "@nestjs/testing": "^10.0.0",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.2",
-    "@types/node": "^20.3.1",
+    "@types/node": "^22.4.1",
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
