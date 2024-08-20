@@ -4,14 +4,14 @@ import { InstallmentStatus } from "../../installment-status/entities/installment
 import { BaseEntity } from "../../config/entities/base.entity";
 import { Loan } from "../../loan/entities/loan.entity";
 
-@Entity({ name: 'installment' })
+@Entity({ name: 'installment' }) //cuotas
 export class Installment extends BaseEntity {
 
   @Column("integer", { name: "amount" })
-  amount: number;
+  amount: number; //cantidad
 
   @Column("timestamp without time zone", { name: "dueDate" })
-  dueDate: Date;
+  dueDate: Date; //fecha de cuota
 
   @ManyToOne(
     () => InstallmentStatus,

@@ -25,6 +25,4 @@ export const dataSourceConfig: DataSourceOptions = {
   logging: true,
   namingStrategy: new SnakeNamingStrategy(),
 }
-console.log('Entities path:', entitiesPath);
-console.log('Migrations path:', migrationsPath);
 export const AppDS = new DataSource(dataSourceConfig);

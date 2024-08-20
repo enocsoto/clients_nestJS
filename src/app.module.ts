@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceConfig } from './config/data.source';
 import { PaymentModule } from './payment/payment.module';
 import { InstallmentModule } from './installment/installment.module';
-import { LoanStatusModule } from './loan-status/loan-status.module';
 import { InstallmentStatusModule } from './installment-status/installment-status.module';
 import { LoanModule } from './loan/loan.module';
 
@@ -20,7 +19,6 @@ import { LoanModule } from './loan/loan.module';
     ClientModule,
     PaymentModule,
     InstallmentModule,
-    LoanStatusModule,
     InstallmentStatusModule,
     LoanModule,
   ],

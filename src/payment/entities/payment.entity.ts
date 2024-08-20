@@ -3,7 +3,7 @@ import { Client } from "../../client/entities/client.entity";
 import { Installment } from "../../installment/entities/installment.entity";
 import { BaseEntity } from "../../config/entities/base.entity";
 
-@Entity({ name: 'payment' })
+@Entity({ name: 'payment' }) //pagos
 export class Payment extends BaseEntity {
 
   @Column("integer", { name: "amount" })

@@ -2,7 +2,7 @@ import { BaseEntity } from "../../config/entities/base.entity";
 import { Installment } from "../../installment/entities/installment.entity";
 import { Column, Entity, OneToMany } from "typeorm";
 
-@Entity({ name: "installment_status" })
+@Entity({ name: "installment_status" }) //estado de la cuota
 export class InstallmentStatus extends BaseEntity {
 
   @Column("character varying", { name: "description" })
