@@ -1,6 +1,4 @@
-import { Type } from "class-transformer";
-import { IsInt, IsNotEmpty, IsNumber, IsOptional, ValidateNested } from "class-validator";
-import { CreatePaymentDto } from "src/payment/dto/create-payment.dto";
+import { IsInt, IsNotEmpty, IsNumber } from "class-validator";
 
 export class CreateLoanDto {
   @IsNumber()
@@ -11,8 +9,4 @@ export class CreateLoanDto {
   @IsNotEmpty()
   termInMonths: number;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CreatePaymentDto)
-  initialPayment?: CreatePaymentDto;
 }

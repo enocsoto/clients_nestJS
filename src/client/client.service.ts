@@ -4,7 +4,6 @@ import { UpdateClientDto } from './dto/update-client.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
-import { Payment } from 'src/payment/entities/payment.entity';
 import { Loan } from 'src/loan/entities/loan.entity';
 
 @Injectable()
@@ -13,8 +12,6 @@ export class ClientService {
   constructor(
     @InjectRepository(Client)
     private readonly clientRepository: Repository<Client>,
-    @InjectRepository(Payment)
-    private readonly paymentRepository: Repository<Payment>,
     @InjectRepository(Loan)
     private readonly loanRepository: Repository<Loan>,
   ) { }
@@ -23,7 +20,10 @@ export class ClientService {
       const savedClient = this.clientRepository.create(createClientDto);
 
       await this.clientRepository.save(savedClient);
-
+      if (createClientDto.loans) {
+        const saveloans = this.loanRepository.create(createClientDto.loans)
+        await this.loanRepository.save(saveloans)
+      }
       return savedClient;
     } catch (error) {
       throw new BadRequestException(`Failed to create client ${error.message}`);

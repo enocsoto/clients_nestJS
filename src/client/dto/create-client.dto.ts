@@ -22,13 +22,8 @@ export class CreateClientDto {
   @IsNotEmpty()
   readonly email: string;
 
-  // @IsOptional()
-  // @ValidateNested()
-  // @Type(() => CreatePaymentDto)
-  // readonly initialPayment?: CreatePaymentDto;
-
-  // @IsOptional()
-  // @ValidateNested({ each: true })
-  // @Type(() => CreateLoanDto)
-  // readonly loans?: CreateLoanDto;
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => CreateLoanDto)
+  readonly loans?: CreateLoanDto[];
 }

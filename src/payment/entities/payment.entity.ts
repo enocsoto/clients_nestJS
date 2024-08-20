@@ -1,7 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { Client } from "../../client/entities/client.entity";
-import { Installment } from "../../installment/entities/installment.entity";
+import { Column, Entity, ManyToOne } from "typeorm";
 import { BaseEntity } from "../../config/entities/base.entity";
+import { Loan } from "src/loan/entities/loan.entity";
 
 @Entity({ name: 'payment' }) //pagos
 export class Payment extends BaseEntity {
@@ -12,12 +11,10 @@ export class Payment extends BaseEntity {
   @Column("timestamp without time zone", { name: "date" })
   dueDate: Date;
 
-  @ManyToOne(() => Installment, (installment) => installment.payments)
-  @JoinColumn([{ name: "installmentId", referencedColumnName: "id" }])
-  installment: Installment;
+  @Column('float')
+  amountPaid: number;
 
-  @ManyToOne(() => Client, (client) => client.payments)
-  @JoinColumn([{ name: "clientId", referencedColumnName: "id" }])
-  client: Client;
+  @ManyToOne(() => Loan, (loan) => loan.payments)
+  loan: Loan;
 
 }

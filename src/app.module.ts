@@ -5,8 +5,6 @@ import database_config from './config/database_config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceConfig } from './config/data.source';
 import { PaymentModule } from './payment/payment.module';
-import { InstallmentModule } from './installment/installment.module';
-import { InstallmentStatusModule } from './installment-status/installment-status.module';
 import { LoanModule } from './loan/loan.module';
 
 @Module({
@@ -18,8 +16,6 @@ import { LoanModule } from './loan/loan.module';
     TypeOrmModule.forRoot({ ...dataSourceConfig }),
     ClientModule,
     PaymentModule,
-    InstallmentModule,
-    InstallmentStatusModule,
     LoanModule,
   ],
   controllers: [],
