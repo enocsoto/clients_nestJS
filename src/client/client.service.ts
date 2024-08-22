@@ -16,7 +16,6 @@ export class ClientService {
 
     @InjectRepository(Loan)
     private readonly loanRepository: Repository<Loan>,
-    @Inject(LoanService) private loanService: LoanService,
   ) { }
   async create(createClientDto: CreateClientDto): Promise<Client> {
     try {

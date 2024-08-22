@@ -21,7 +21,6 @@ export class CreateLoanDto {
   installments: number;
 
   @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => CreateClientDto)
-  client?: Client;
+  @IsInt()
+  document?: number;
 }

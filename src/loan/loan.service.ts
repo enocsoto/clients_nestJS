@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateLoanDto } from './dto/create-loan.dto';
-import { UpdateLoanDto } from './dto/update-loan.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Loan } from './entities/loan.entity';
+import { Client } from 'src/client/entities/client.entity';
 
 @Injectable()
 export class LoanService {
@@ -11,30 +11,31 @@ export class LoanService {
   constructor(
     @InjectRepository(Loan)
     private readonly loansRepository: Repository<Loan>,
+    @InjectRepository(Client)
+    private readonly clientRepository: Repository<Client>,
   ) { }
-  create(createLoanDto: CreateLoanDto) {
-    return 'This action adds a new loan';
-  }
 
-  findAll() {
-    return `This action returns all loan`;
-  }
+  async create(createLoanDto: CreateLoanDto) {
+    try {
 
-  findOne(id: number) {
-    return `This action returns a #${id} loan`;
-  }
-
-  async update(id: string, updateLoanDto: UpdateLoanDto) {
-    const loans: Loan = await this.loansRepository.findOne({ where: { id } })
-
-    if (!loans) {
-      throw new Error(`Loan with ID ${id} not found`);
+      const client = await this.clientRepository.findOne({ where: { document: createLoanDto.document } });
+      if (!client) throw new BadRequestException(`Client not found`);
+      const loan = this.loansRepository.create({
+        ...createLoanDto,
+        client,
+      });
+      return await this.loansRepository.save(loan);
+    } catch (error) {
+      throw new BadRequestException(`Failed to create loan: ${error.message}`);
     }
-    await this.loansRepository.update(id, updateLoanDto);
-    return loans;
+  }
 
+  async findAll() {
+    try {
+      return await this.loansRepository.find({ relations: ['client', 'payments'] });
+    } catch (error) {
+      throw new Error(`Failed to fetch loans: ${error.message}`);
+    }
   }
-  remove(id: number) {
-    return `This action removes a #${id} loan`;
-  }
+
 }
