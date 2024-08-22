@@ -67,15 +67,15 @@ export class ClientService {
 
 
   async update(document: number, updateClientDto: UpdateClientDto): Promise<Client> {
+    const client: Client = await this.findOneByDocument(document);
+
     try {
-      const client: Client = await this.findOneByDocument(document);
+
       if (updateClientDto.loans?.length > 0) {
-        // Retrieve existing loans for the client
         const existingLoans = await this.loanRepository.find({ where: { client: { id: client.id } } });
 
         const loansToSave = [];
         for (const newLoan of updateClientDto.loans) {
-          // Check if a loan with the same amount and loanDate already exists
           const duplicateLoan = existingLoans.find(
             loan =>
               loan.amount === newLoan.amount &&
@@ -85,7 +85,7 @@ export class ClientService {
             loansToSave.push({
               ...newLoan,
               loanDate: new Date(newLoan.loanDate),
-              client: client, // Maintain the client relationship
+              client: client.id,
             });
           }
         }
@@ -106,15 +106,17 @@ export class ClientService {
     }
   }
 
-  async remove(id: string): Promise<string> {
+  async remove(document: number): Promise<string> {
     try {
-      const result = await this.clientRepository.delete(id);
-      if (result.affected === 0) {
-        throw new NotFoundException(`Client with ID ${id} not found`);
-      }
-      return `Client with ID ${id} deleted successfully`;
+      const client = await this.findOneByDocument(document);
+      await this.loanRepository.update(
+        { client: { id: client.id } },
+        { deletedAt: new Date() }
+      );
+      await this.clientRepository.softDelete({ id: client.id });
+      return `Client with document ${document} deleted successfully`;
     } catch (error) {
-      throw new Error(`Error deleting client with ID ${id}: ${error.message}`);
+      throw new Error(`Error deleting client with document ${document}: ${error.message}`);
     }
   }
 }

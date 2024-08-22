@@ -27,8 +27,8 @@ export class ClientController {
     return this.clientService.update(+document, updateClientDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clientService.remove(id);
+  @Delete(':document')
+  remove(@Param('document') document: string) {
+    return this.clientService.remove(+document);
   }
 }
