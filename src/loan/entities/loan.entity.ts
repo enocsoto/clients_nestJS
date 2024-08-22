@@ -6,20 +6,17 @@ import { Payment } from "src/payment/entities/payment.entity";
 @Entity({ name: "loan" }) //prestamos
 export class Loan extends BaseEntity {
 
-  @Column("decimal", { name: "amount", precision: 10, scale: 2 })
+  @Column('int', { name: "amount" })
   amount: number; //cantidad
 
-  @Column("time with time zone", { name: "loan_date", })
+  @Column("timestamp with time zone", { name: "loan_date", })
   loanDate: Date; //fecha del prestamo
 
-  @Column('float')
+  @Column('int')
   interestRate: number; //intereses del prestamo
 
   @Column('int')
   installments: number; //numero de cuotas
-
-  @Column("integer", { name: "term_in_months" })
-  termInMonths: number; //meses
 
   @ManyToOne(() => Client, (client) => client.loans)
   client: Client;

@@ -1,7 +1,6 @@
 import { Type } from "class-transformer";
-import { IsString, IsNotEmpty, IsInt, IsEmail, Max, ValidateNested, IsOptional, MinLength } from "class-validator";
+import { IsString, IsNotEmpty, IsInt, IsEmail, ValidateNested, IsOptional, MinLength } from "class-validator";
 import { CreateLoanDto } from "src/loan/dto/create-loan.dto";
-import { CreatePaymentDto } from "src/payment/dto/create-payment.dto";
 
 export class CreateClientDto {
   @IsString()
@@ -25,5 +24,5 @@ export class CreateClientDto {
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => CreateLoanDto)
-  readonly loans?: CreateLoanDto[];
+  loans?: CreateLoanDto[];
 }

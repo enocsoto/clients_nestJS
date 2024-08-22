@@ -11,7 +11,7 @@ export class Payment extends BaseEntity {
   @Column("timestamp without time zone", { name: "date" })
   dueDate: Date;
 
-  @Column('float')
+  @Column('float', { name: 'ammount_paid' })
   amountPaid: number;
 
   @ManyToOne(() => Loan, (loan) => loan.payments)

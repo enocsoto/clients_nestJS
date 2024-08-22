@@ -5,7 +5,7 @@ import { UpdateLoanDto } from './dto/update-loan.dto';
 
 @Controller('loan')
 export class LoanController {
-  constructor(private readonly loanService: LoanService) {}
+  constructor(private readonly loanService: LoanService) { }
 
   @Post()
   create(@Body() createLoanDto: CreateLoanDto) {
@@ -24,7 +24,7 @@ export class LoanController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateLoanDto: UpdateLoanDto) {
-    return this.loanService.update(+id, updateLoanDto);
+    return this.loanService.update(id, updateLoanDto);
   }
 
   @Delete(':id')
