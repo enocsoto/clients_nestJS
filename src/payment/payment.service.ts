@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from 'src/client/entities/client.entity';
 import { Repository } from 'typeorm';
 import { Payment } from './entities/payment.entity';
+import { Loan } from 'src/loan/entities/loan.entity';
 
 @Injectable()
 export class PaymentService {
@@ -13,17 +14,38 @@ export class PaymentService {
     private readonly paymentRepository: Repository<Payment>,
     @InjectRepository(Client)
     private readonly clientRepository: Repository<Client>,
+    @InjectRepository(Loan)
+    private loansRepository: Repository<Loan>,
   ) { }
+
+  /**
+   * Creates a new payment.
+   * @param createPaymentDto The data required to create a payment.
+   * @returns The created payment entity.
+   * @throws NotFoundException If the loan or client does not exist.
+   */
+
   async create(createPaymentDto: CreatePaymentDto) {
     try {
-      if (createPaymentDto.client) {
-        const client = await this.clientRepository.findOneBy({ document: createPaymentDto.client.document });
-        if (!client) {
-          throw new NotFoundException(`Client with Document ${createPaymentDto.client.document} not found`);
-        }
-      }
+      const loan = await this.loansRepository.findOne({
+        where: { payments: createPaymentDto.loan },
+        relations: ['loan'],
+      });
 
-      const payment = this.paymentRepository.create(createPaymentDto);
+      if (!loan) {
+        throw new NotFoundException(`Loan with ID ${createPaymentDto.loan} not found`);
+      }
+      const client = await this.clientRepository.findOneBy({ id: loan.client.id });
+
+
+      if (!client) {
+        throw new NotFoundException(`Client with ID ${loan.client.id} not found`);
+      }
+      const payment = this.paymentRepository.create({
+        ...createPaymentDto,
+        loan: loan,
+      });
+
       return await this.paymentRepository.save(payment);
     } catch (error) {
       throw new Error(`Error creating payment: ${error.message}`);
@@ -32,7 +54,7 @@ export class PaymentService {
 
   async findAll() {
     try {
-      const payments = await this.paymentRepository.find({ relations: ['client', 'loanStatus'] });
+      const payments = await this.paymentRepository.find({ relations: ['loan', 'loan.client'] });
       if (!payments) {
         throw new NotFoundException('No payments found');
       }
@@ -46,7 +68,7 @@ export class PaymentService {
     try {
       const payment = await this.paymentRepository.findOne({
         where: { id },
-        relations: ['client', 'loanStatus']
+        relations: ['loan', 'loan.client'],
       });
       if (!payment) {
         throw new NotFoundException(`Payment with ID ${id} not found`);
@@ -78,7 +100,8 @@ export class PaymentService {
   async update(id: string, updatePaymentDto: UpdatePaymentDto) {
     try {
       const payment = await this.findOne(id);
-      await this.paymentRepository.update(id, updatePaymentDto);
+      Object.assign(payment, updatePaymentDto);
+      await this.paymentRepository.save(payment);
       return payment;
     } catch (error) {
       throw new Error(`Error updating payment with ID ${id}: ${error.message}`);

@@ -1,6 +1,6 @@
-import { Type } from "class-transformer";
-import { IsInt, IsNotEmpty, IsOptional, IsPositive, ValidateNested } from "class-validator";
-import { CreateClientDto } from "src/client/dto/create-client.dto";
+import { IsInt, IsNotEmpty, IsPositive } from "class-validator";
+import { Loan } from "src/loan/entities/loan.entity";
+import { ManyToOne } from "typeorm";
 
 export class CreatePaymentDto {
   @IsPositive()
@@ -10,9 +10,7 @@ export class CreatePaymentDto {
   @IsNotEmpty()
   dueDate: Date;
 
-  @ValidateNested()
-  @Type(() => CreateClientDto)
-  @IsOptional()
-  client?: CreateClientDto;
+  @ManyToOne(() => Loan, loan => loan.payments)
+  loan: Loan;
 
 }
